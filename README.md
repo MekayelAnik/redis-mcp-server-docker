@@ -1,0 +1,568 @@
+# Redis MCP Server
+### Multi-Architecture Docker Image for Redis Data Management
+
+<div align="left">
+
+[![Docker Pulls](https://img.shields.io/docker/pulls/mekayelanik/redis-mcp-server.svg?style=flat-square)](https://hub.docker.com/r/mekayelanik/redis-mcp-server)
+[![Docker Stars](https://img.shields.io/docker/stars/mekayelanik/redis-mcp-server.svg?style=flat-square)](https://hub.docker.com/r/mekayelanik/redis-mcp-server)
+[![License](https://img.shields.io/badge/license-GPL-blue.svg?style=flat-square)](https://raw.githubusercontent.com/MekayelAnik/redis-mcp-server-docker/refs/heads/main/LICENSE)
+
+**[Upstream Repository](https://github.com/redis/mcp-redis)** • **[PyPI Package](https://pypi.org/project/redis-mcp-server/)** • **[Docker Hub](https://hub.docker.com/r/mekayelanik/redis-mcp-server)**
+
+</div>
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Supported Architectures](#supported-architectures)
+- [Available Tags](#available-tags)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+- [MCP Client Configuration](#mcp-client-configuration)
+- [Network Configuration](#network-configuration)
+- [Updating](#updating)
+- [Troubleshooting](#troubleshooting)
+- [Additional Resources](#additional-resources)
+- [Support & License](#support--license)
+
+---
+
+## Buy Me a Coffee
+**Your support encourages me to keep creating/supporting my open-source projects.** If you found value in this project, you can buy me a coffee to keep me inspired.
+
+<p align="center">
+<a href="https://07mekayel07.gumroad.com/coffee" target="_blank">
+<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" width="217" height="60">
+</a>
+</p>
+
+## Overview
+
+Redis MCP Server is a Model Context Protocol server that provides tools for managing and interacting with Redis databases. Built on Alpine Linux for minimal footprint and maximum security, wrapped with Supergateway for HTTP/SSE/WebSocket transport.
+
+### Key Features
+
+- **Multi-Architecture Support** - Native support for x86-64 and ARM64
+- **Multiple Transport Protocols** - HTTP, SSE, and WebSocket support
+- **Secure by Design** - Alpine-based with minimal attack surface
+- **High Performance** - ZSTD compression for faster deployments
+- **Production Ready** - Stable releases with comprehensive testing
+- **Easy Configuration** - Simple environment variable setup
+
+---
+
+## Supported Architectures
+
+| Architecture | Tag Prefix | Status |
+|:-------------|:-----------|:------:|
+| **x86-64** | `amd64-<version>` | Stable |
+| **ARM64** | `arm64v8-<version>` | Stable |
+
+> Multi-arch images automatically select the correct architecture for your system.
+
+---
+
+## Available Tags
+
+| Tag | Stability | Description | Use Case |
+|:----|:---------:|:------------|:---------|
+| `stable` | High | Most stable release | **Recommended for production** |
+| `latest` | High | Latest stable release | Stay current with stable features |
+| `1.0.0` | High | Specific version | Specific version | Version pinning for consistency |
+| `beta` | Low | Beta releases | **Testing only** |
+
+### System Requirements
+
+- **Docker Engine:** 23.0+
+- **RAM:** Minimum 512MB
+- **CPU:** Single core sufficient
+
+> **CRITICAL:** Do NOT expose this container directly to the internet without proper security measures (reverse proxy, SSL/TLS, authentication, firewall rules).
+
+---
+
+## Quick Start
+
+### Docker Compose (Recommended)
+
+```yaml
+services:
+  redis-mcp-server:
+    image: mekayelanik/redis-mcp-server:stable
+    container_name: redis-mcp-server
+    restart: unless-stopped
+    ports:
+      - "8030:8030"
+    environment:
+      - PORT=8030
+      - INTERNAL_PORT=38011
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Dhaka
+      - PROTOCOL=HTTP
+      - ENABLE_HTTPS=false
+      - HTTP_VERSION_MODE=auto
+      # Redis connection settings
+      # - REDIS_URL=redis://localhost:6379
+      # - REDIS_HOST=localhost
+      # - REDIS_PORT=6379
+      # - REDIS_USERNAME=
+      # - REDIS_PWD=
+      # Optional: require Bearer token auth at HAProxy layer
+      # - API_KEY=replace-with-strong-secret
+    hostname: redis-mcp-server
+    domainname: local
+```
+
+**Deploy:**
+```bash
+docker compose up -d
+docker compose logs -f redis-mcp-server
+```
+
+### Docker CLI
+
+```bash
+docker run -d \
+  --name=redis-mcp-server \
+  --restart=unless-stopped \
+  -p 8030:8030 \
+  -e PORT=8030 \
+  -e INTERNAL_PORT=38011 \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e TZ=Asia/Dhaka \
+  -e PROTOCOL=HTTP \
+  -e ENABLE_HTTPS=false \
+  -e HTTP_VERSION_MODE=auto \
+  mekayelanik/redis-mcp-server:stable
+```
+
+### Access Endpoints
+
+| Protocol | Endpoint | Use Case |
+|:---------|:---------|:---------|
+| **HTTP** | `http://host-ip:8030/mcp` | Best compatibility (recommended) |
+| **SSE** | `http://host-ip:8030/sse` | Real-time streaming |
+| **WebSocket** | `ws://host-ip:8030/message` | Bidirectional communication |
+
+When HTTPS is enabled (`ENABLE_HTTPS=true`), use TLS endpoints:
+
+| Protocol | Endpoint |
+|:---------|:---------|
+| **SHTTP** | `https://host-ip:8030/mcp` |
+| **SSE** | `https://host-ip:8030/sse` |
+| **WebSocket** | `wss://host-ip:8030/message` |
+
+> **Security Warning:** The container now defaults to HTTP (`ENABLE_HTTPS=false`) for easier local setup. Use `ENABLE_HTTPS=true` for production, public networks, or any untrusted environment.
+>
+> **ARM Devices:** Allow 30-60 seconds for initialization before accessing endpoints.
+
+---
+
+## Configuration
+
+### Environment Variables
+
+| Variable | Default | Description |
+|:---------|:-------:|:------------|
+| `PORT` | `8030` | External server port |
+| `INTERNAL_PORT` | `38011` | Internal MCP server port used by supergateway |
+| `PUID` | `1000` | User ID for file permissions |
+| `PGID` | `1000` | Group ID for file permissions |
+| `TZ` | `Asia/Dhaka` | Container timezone ([TZ database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)) |
+| `PROTOCOL` | `SHTTP` | Default transport protocol |
+| `REDIS_URL` | *(empty)* | Full Redis connection URL (e.g. `redis://user:pass@host:6379`) |
+| `REDIS_HOST` | *(empty)* | Redis server hostname |
+| `REDIS_PORT` | *(empty)* | Redis server port |
+| `REDIS_USERNAME` | *(empty)* | Redis authentication username |
+| `REDIS_PWD` | *(empty)* | Redis authentication password |
+| `API_KEY` | *(empty)* | Enables Bearer token auth (`Authorization: Bearer <API_KEY>`) |
+| `CORS` | *(empty)* | Comma-separated CORS origins, supports `*` |
+| `ENABLE_HTTPS` | `false` | Enables TLS termination in HAProxy |
+| `TLS_CERT_PATH` | `/etc/haproxy/certs/server.crt` | TLS cert path |
+| `TLS_KEY_PATH` | `/etc/haproxy/certs/server.key` | TLS private key path |
+| `TLS_PEM_PATH` | `/etc/haproxy/certs/server.pem` | Combined PEM file used by HAProxy |
+| `TLS_CN` | `localhost` | CN for auto-generated certificate |
+| `TLS_SAN` | `DNS:<TLS_CN>` | SAN for auto-generated certificate |
+| `TLS_DAYS` | `365` | Auto-generated cert validity period |
+| `TLS_MIN_VERSION` | `TLSv1.3` | Minimum TLS protocol (`TLSv1.2` or `TLSv1.3`) |
+| `HTTP_VERSION_MODE` | `auto` | `auto`, `all`, `h1`, `h2`, `h3`, `h1+h2` |
+
+### HTTPS and HTTP Version Notes
+
+- If `ENABLE_HTTPS=true` and cert files are missing, the container auto-generates a self-signed certificate.
+- If `TLS_CERT_PATH` and `TLS_KEY_PATH` exist, they are merged into `TLS_PEM_PATH` and used directly.
+- `HTTP_VERSION_MODE=h3` (or `auto`) enables HTTP/3 only when HAProxy build includes QUIC; otherwise it safely falls back.
+
+### API Key Authentication Notes
+
+- Set `API_KEY` to enforce authentication at reverse proxy level.
+- Expected header format: `Authorization: Bearer <API_KEY>`.
+- Localhost health checks remain accessible for liveness/readiness.
+
+### User & Group IDs
+
+Find your IDs and set them to avoid permission issues:
+
+```bash
+id username
+# uid=1000(user) gid=1000(group)
+```
+
+### Timezone Examples
+
+```yaml
+- TZ=Asia/Dhaka        # Bangladesh
+- TZ=America/New_York  # US Eastern
+- TZ=Europe/London     # UK
+- TZ=UTC               # Universal Time
+```
+
+---
+
+## MCP Client Configuration
+
+### Transport Support
+
+| Client | HTTP | SSE | WebSocket | Recommended |
+|:-------|:----:|:---:|:---------:|:------------|
+| **VS Code (Cline/Roo-Cline)** | Yes | Yes | No | HTTP |
+| **Claude Desktop** | Yes | Yes | Experimental | HTTP |
+| **Claude CLI** | Yes | Yes | Experimental | HTTP |
+| **Codex CLI** | Yes | Yes | Experimental | HTTP |
+| **Codeium (Windsurf)** | Yes | Yes | Experimental | HTTP |
+| **Cursor** | Yes | Yes | Experimental | HTTP |
+
+---
+
+### VS Code (Cline/Roo-Cline)
+
+Configure in `.vscode/settings.json`:
+
+```json
+{
+  "mcp.servers": {
+    "redis-mcp": {
+      "url": "http://host-ip:8030/mcp",
+      "transport": "http"
+    }
+  }
+}
+```
+
+---
+
+### Claude Desktop App/Claude Code
+
+**With API_KEY:**
+```
+claude mcp add-json redis-mcp '{"type":"http","url":"http://localhost:8030/mcp","headers":{"Authorization":"Bearer <YOUR_API_KEY>"}}'
+```
+
+**Without API_KEY:**
+```
+claude mcp add-json redis-mcp '{"type":"http","url":"http://localhost:8030/mcp"}'
+```
+
+---
+
+### Codex CLI
+
+Configure in `~/.codex/config.json`:
+
+```json
+{
+  "mcpServers": {
+    "redis-mcp": {
+      "transport": "http",
+      "url": "http://host-ip:8030/mcp"
+    }
+  }
+}
+```
+
+---
+
+### Codeium (Windsurf)
+
+Configure in `.codeium/mcp_settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "redis-mcp": {
+      "transport": "http",
+      "url": "http://host-ip:8030/mcp"
+    }
+  }
+}
+```
+
+---
+
+### Cursor
+
+Configure in `~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "redis-mcp": {
+      "transport": "http",
+      "url": "http://host-ip:8030/mcp"
+    }
+  }
+}
+```
+
+---
+
+### Testing Configuration
+
+Verify with [MCP Inspector](https://github.com/modelcontextprotocol/inspector):
+
+```bash
+npm install -g @modelcontextprotocol/inspector
+mcp-inspector http://host-ip:8030/mcp
+```
+
+---
+
+## Network Configuration
+
+### Comparison
+
+| Network Mode | Complexity | Performance | Use Case |
+|:-------------|:----------:|:-----------:|:---------|
+| **Bridge** | Easy | Good | Default, isolated |
+| **Host** | Moderate | Excellent | Direct host access |
+| **MACVLAN** | Advanced | Excellent | Dedicated IP |
+
+---
+
+### Bridge Network (Default)
+
+```yaml
+services:
+  redis-mcp-server:
+    image: mekayelanik/redis-mcp-server:stable
+    ports:
+      - "8030:8030"
+```
+
+**Benefits:** Container isolation, easy setup, works everywhere
+**Access:** `http://localhost:8030/mcp`
+
+---
+
+### Host Network (Linux Only)
+
+```yaml
+services:
+  redis-mcp-server:
+    image: mekayelanik/redis-mcp-server:stable
+    network_mode: host
+```
+
+**Benefits:** Maximum performance, no NAT overhead, no port mapping needed
+**Considerations:** Linux only, shares host network namespace
+**Access:** `http://localhost:8030/mcp`
+
+---
+
+### MACVLAN Network (Advanced)
+
+```yaml
+services:
+  redis-mcp-server:
+    image: mekayelanik/redis-mcp-server:stable
+    mac_address: "AB:BC:CD:DE:EF:01"
+    networks:
+      macvlan-net:
+        ipv4_address: 192.168.1.100
+
+networks:
+  macvlan-net:
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+          gateway: 192.168.1.1
+```
+
+**Benefits:** Dedicated IP, direct LAN access
+**Considerations:** Linux only, requires additional setup
+**Access:** `http://192.168.1.100:8030/mcp`
+
+---
+
+## Updating
+
+### Docker Compose
+
+```bash
+docker compose pull
+docker compose up -d
+docker image prune -f
+```
+
+### Docker CLI
+
+```bash
+docker pull mekayelanik/redis-mcp-server:stable
+docker stop redis-mcp-server && docker rm redis-mcp-server
+# Run your original docker run command
+docker image prune -f
+```
+
+### One-Time Update with Watchtower
+
+```bash
+docker run --rm \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  containrrr/watchtower \
+  --run-once \
+  redis-mcp-server
+```
+
+---
+
+## Troubleshooting
+
+### Pre-Flight Checklist
+
+- Docker Engine 23.0+
+- Port 8030 available
+- Sufficient startup time (ARM devices)
+- Latest stable image
+- Correct configuration
+
+### Common Issues
+
+#### Container Won't Start
+
+```bash
+# Check Docker version
+docker --version
+
+# Verify port availability
+sudo netstat -tulpn | grep 8030
+
+# Check logs
+docker logs redis-mcp-server
+```
+
+#### Permission Errors
+
+```bash
+# Get your IDs
+id $USER
+
+# Update configuration with correct PUID/PGID
+# Fix volume permissions if needed
+sudo chown -R 1000:1000 /path/to/volume
+```
+
+#### Client Cannot Connect
+
+```bash
+# Test connectivity
+curl http://localhost:8030/mcp
+curl http://host-ip:8030/mcp
+curl -k https://localhost:8030/mcp
+curl -k https://host-ip:8030/mcp
+
+# Check firewall
+sudo ufw status
+
+# Verify container
+docker inspect redis-mcp-server | grep IPAddress
+```
+
+#### Slow ARM Performance
+
+- Wait 30-60 seconds after start
+- Monitor: `docker logs -f redis-mcp-server`
+- Check resources: `docker stats redis-mcp-server`
+- Use faster storage (SSD vs SD card)
+
+### Debug Information
+
+When reporting issues, include:
+
+```bash
+# System info
+docker --version && uname -a
+
+# Container logs
+docker logs redis-mcp-server --tail 200 > logs.txt
+
+# Container config
+docker inspect redis-mcp-server > inspect.json
+```
+
+---
+
+## Additional Resources
+
+### Documentation
+- [Redis MCP Upstream](https://github.com/redis/mcp-redis)
+- [PyPI Package](https://pypi.org/project/redis-mcp-server/)
+- [MCP Inspector](https://github.com/modelcontextprotocol/inspector)
+
+### Docker Resources
+- [Docker Compose Best Practices](https://docs.docker.com/compose/production/)
+- [Docker Networking](https://docs.docker.com/network/)
+- [Docker Security](https://docs.docker.com/engine/security/)
+
+### Monitoring
+- [Diun - Update Notifier](https://crazymax.dev/diun/)
+- [Watchtower](https://containrrr.dev/watchtower/)
+
+---
+
+## Buy Me a Coffee
+**Your support encourages me to keep creating/supporting my open-source projects.** If you found value in this project, you can buy me a coffee to keep me inspired.
+
+<p align="center">
+  <a href="https://07mekayel07.gumroad.com/coffee" target="_blank">
+    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" width="217" height="60">
+  </a>
+</p>
+
+## Support & License
+
+### Getting Help
+
+**Docker Image Issues:**
+- GitHub: [redis-mcp-server-docker/issues](https://github.com/MekayelAnik/redis-mcp-server-docker/issues)
+
+**Redis MCP Issues:**
+- GitHub: [redis/mcp-redis/issues](https://github.com/redis/mcp-redis/issues)
+
+### Contributing
+
+We welcome contributions:
+1. Report bugs via GitHub Issues
+2. Suggest features
+3. Improve documentation
+4. Test beta releases
+
+### License
+
+GPL License. See [LICENSE](https://raw.githubusercontent.com/MekayelAnik/redis-mcp-server-docker/refs/heads/main/LICENSE) for details.
+
+Redis MCP server has its own license - see [upstream repository](https://github.com/redis/mcp-redis).
+
+---
+
+<div align="center">
+
+[Back to Top](#redis-mcp-server)
+
+</div>

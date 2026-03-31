@@ -1,0 +1,12 @@
+build_logs
+build_data
+resources/build_data
+resources/build-timestamp
+resources/tag
+Dockerfile.redis-mcp-server
+/.vs
+example/
+/Dockerfile.redis-mcp-server
+/Dockerfile
+.buildx-cache
+.git
