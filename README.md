@@ -1,4 +1,19 @@
+<p align="center"><img src="https://redis.io/wp-content/uploads/2024/04/Logotype.svg" alt="Redis Logo" width="200"></p>
+
 # Redis MCP Server
+
+<p align="center">
+  <a href="https://hub.docker.com/r/mekayelanik/redis-mcp-server"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/mekayelanik/redis-mcp-server?style=flat-square&logo=docker"></a>
+  <a href="https://hub.docker.com/r/mekayelanik/redis-mcp-server"><img alt="Docker Stars" src="https://img.shields.io/docker/stars/mekayelanik/redis-mcp-server?style=flat-square&logo=docker"></a>
+  <a href="https://github.com/mekayelanik/redis-mcp-server-docker/pkgs/container/redis-mcp-server"><img alt="GHCR" src="https://img.shields.io/badge/GHCR-ghcr.io%2Fmekayelanik%2Fredis-mcp-server-blue?style=flat-square&logo=github"></a>
+  <a href="https://github.com/mekayelanik/redis-mcp-server-docker/blob/main/LICENSE"><img alt="License: GPL-3.0" src="https://img.shields.io/badge/License-GPL--3.0-blue?style=flat-square"></a>
+  <a href="https://hub.docker.com/r/mekayelanik/redis-mcp-server"><img alt="Platforms" src="https://img.shields.io/badge/Platforms-amd64%20%7C%20arm64-lightgrey?style=flat-square"></a>
+  <a href="https://github.com/MekayelAnik/redis-mcp-server-docker/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/MekayelAnik/redis-mcp-server-docker?style=flat-square"></a>
+  <a href="https://github.com/MekayelAnik/redis-mcp-server-docker/forks"><img alt="GitHub Forks" src="https://img.shields.io/github/forks/MekayelAnik/redis-mcp-server-docker?style=flat-square"></a>
+  <a href="https://github.com/MekayelAnik/redis-mcp-server-docker/issues"><img alt="GitHub Issues" src="https://img.shields.io/github/issues/MekayelAnik/redis-mcp-server-docker?style=flat-square"></a>
+  <a href="https://github.com/MekayelAnik/redis-mcp-server-docker/commits/main"><img alt="Last Commit" src="https://img.shields.io/github/last-commit/MekayelAnik/redis-mcp-server-docker?style=flat-square"></a>
+</p>
+
 ### Multi-Architecture Docker Image for Redis Data Management
 
 <div align="left">
