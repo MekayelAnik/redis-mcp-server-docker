@@ -19,11 +19,14 @@ print_separator() {
 
 # Print ASCII art
 print_ascii_art() {
-    printf "${ORANGE}  ____          _ _       __  __  ____ ____    ____                           ${NC}\n"
-    printf "${ORANGE} |  _ \\ ___  __| (_)___  |  \\/  |/ ___|  _ \\  / ___|  ___ _ ____   _____ _ __ ${NC}\n"
-    printf "${ORANGE} | |_) / _ \\/ _\` | / __| | |\\/| | |   | |_) | \\___ \\ / _ \\ '__\\ \\ / / _ \\ '__|${NC}\n"
-    printf "${ORANGE} |  _ <  __/ (_| | \\__ \\ | |  | | |___|  __/   ___) |  __/ |   \\ V /  __/ |   ${NC}\n"
-    printf "${ORANGE} |_| \\_\\___|\\__,_|_|___/ |_|  |_|\\____|_|     |____/ \\___|_|    \\_/ \\___|_|   ${NC}\n"
+    printf "${ERROR_RED}  /SSSSSSS                  /SS /SS                 /SS      /SS  /SSSSSS  /SSSSSSS         /SSSSSS                                                      ${NC}\n"
+    printf "${ERROR_RED} | SS__  SS                | SS|__/                | SSS    /SSS /SS__  SS| SS__  SS       /SS__  SS                                                     ${NC}\n"
+    printf "${ERROR_RED} | SS  \ SS  /SSSSSS   /SSSSSSS /SS  /SSSSSSS      | SSSS  /SSSS| SS  \__/| SS  \ SS      | SS  \__/  /SSSSSS   /SSSSSS  /SS    /SS /SSSSSS   /SSSSSS    ${NC}\n"
+    printf "${ERROR_RED} | SSSSSSS/ /SS__  SS /SS__  SS| SS /SS_____/      | SS SS/SS SS| SS      | SSSSSSS/      |  SSSSSS  /SS__  SS /SS__  SS|  SS  /SS//SS__  SS /SS__  SS   ${NC}\n"
+    printf "${ERROR_RED} | SS__  SS| SSSSSSSS| SS  | SS| SS|  SSSSSS       | SS  SSS| SS| SS      | SS____/        \____  SS| SSSSSSSS| SS  \__/ \  SS/SS/| SSSSSSSS| SS  \__/   ${NC}\n"
+    printf "${ERROR_RED} | SS  \ SS| SS_____/| SS  | SS| SS \____  SS      | SS\  S | SS| SS    SS| SS             /SS  \ SS| SS_____/| SS        \  SSS/ | SS_____/| SS         ${NC}\n"
+    printf "${ERROR_RED} | SS  | SS|  SSSSSSS|  SSSSSSS| SS /SSSSSSS/      | SS \/  | SS|  SSSSSS/| SS            |  SSSSSS/|  SSSSSSS| SS         \  S/  |  SSSSSSS| SS         ${NC}\n"
+    printf "${ERROR_RED} |__/  |__/ \_______/ \_______/|__/|_______/       |__/     |__/ \______/ |__/             \______/  \_______/|__/          \_/    \_______/|__/         ${NC}\n"                                                                                                                                            
     printf "\n"
 }
 

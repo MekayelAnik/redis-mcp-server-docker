@@ -29,7 +29,7 @@
 
 ---
 
-## Buy Me a Coffee
+## 😎 Buy Me a Coffee ☕︎
 **Your support encourages me to keep creating/supporting my open-source projects.** If you found value in this project, you can buy me a coffee to keep me inspired.
 
 <p align="center">
@@ -526,7 +526,7 @@ docker inspect redis-mcp-server > inspect.json
 
 ---
 
-## Buy Me a Coffee
+## 😎 Buy Me a Coffee ☕︎
 **Your support encourages me to keep creating/supporting my open-source projects.** If you found value in this project, you can buy me a coffee to keep me inspired.
 
 <p align="center">
