@@ -38,16 +38,16 @@ LABEL org.opencontainers.image.source="https://github.com/mekayelanik/redis-mcp-
 
 # Copy the entrypoint script into the container and make it executable
 COPY ./resources/ /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/banner.sh \
-    && if [ -f /usr/local/bin/build-timestamp.txt ]; then chmod +r /usr/local/bin/build-timestamp.txt; fi \
-    && mkdir -p /etc/haproxy \
-    && mv -vf /usr/local/bin/haproxy.cfg.template /etc/haproxy/haproxy.cfg.template \
+RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/banner.sh \\
+    && if [ -f /usr/local/bin/build-timestamp.txt ]; then chmod +r /usr/local/bin/build-timestamp.txt; fi \\
+    && mkdir -p /etc/haproxy \\
+    && mv -vf /usr/local/bin/haproxy.cfg.template /etc/haproxy/haproxy.cfg.template \\
     && ls -la /etc/haproxy/haproxy.cfg.template
 
 # Install required APK packages (Python base + Node.js for supergateway)
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" > /etc/apk/repositories && \
-    echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
-    apk --update-cache --no-cache add bash shadow su-exec tzdata haproxy netcat-openbsd openssl nodejs npm && \
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/main" > /etc/apk/repositories && \\
+    echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \\
+    apk --update-cache --no-cache add bash shadow su-exec tzdata haproxy netcat-openbsd openssl nodejs npm && \\
     rm -rf /var/cache/apk/*
 
 # HAProxy with native QUIC/H3 support from official image
