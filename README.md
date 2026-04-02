@@ -110,6 +110,14 @@ services:
       # - REDIS_PORT=6379
       # - REDIS_USERNAME=
       # - REDIS_PWD=
+      # - REDIS_DB=0
+      # - REDIS_SSL=false
+      # - REDIS_SSL_CA_PATH=
+      # - REDIS_SSL_KEYFILE=
+      # - REDIS_SSL_CERTFILE=
+      # - REDIS_SSL_CERT_REQS=required
+      # - REDIS_SSL_CA_CERTS=
+      # - REDIS_CLUSTER_MODE=false
       # Optional: require Bearer token auth at HAProxy layer
       # - API_KEY=replace-with-strong-secret
     hostname: redis-mcp-server
@@ -175,10 +183,18 @@ When HTTPS is enabled (`ENABLE_HTTPS=true`), use TLS endpoints:
 | `TZ` | `Asia/Dhaka` | Container timezone ([TZ database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)) |
 | `PROTOCOL` | `SHTTP` | Default transport protocol |
 | `REDIS_URL` | *(empty)* | Full Redis connection URL (e.g. `redis://user:pass@host:6379`) |
-| `REDIS_HOST` | *(empty)* | Redis server hostname |
-| `REDIS_PORT` | *(empty)* | Redis server port |
+| `REDIS_HOST` | `127.0.0.1` | Redis server hostname |
+| `REDIS_PORT` | `6379` | Redis server port |
 | `REDIS_USERNAME` | *(empty)* | Redis authentication username |
 | `REDIS_PWD` | *(empty)* | Redis authentication password |
+| `REDIS_DB` | `0` | Redis database number |
+| `REDIS_SSL` | `false` | Enable SSL for Redis connection (`true`, `1`, `t`) |
+| `REDIS_SSL_CA_PATH` | *(empty)* | Path to SSL CA file |
+| `REDIS_SSL_KEYFILE` | *(empty)* | Path to SSL key file |
+| `REDIS_SSL_CERTFILE` | *(empty)* | Path to SSL certificate file |
+| `REDIS_SSL_CERT_REQS` | `required` | SSL certificate requirements |
+| `REDIS_SSL_CA_CERTS` | *(empty)* | Path to SSL CA certificates |
+| `REDIS_CLUSTER_MODE` | `false` | Enable Redis Cluster mode (`true`, `1`, `t`) |
 | `API_KEY` | *(empty)* | Enables Bearer token auth (`Authorization: Bearer <API_KEY>`) |
 | `CORS` | *(empty)* | Comma-separated CORS origins, supports `*` |
 | `ENABLE_HTTPS` | `false` | Enables TLS termination in HAProxy |

@@ -469,7 +469,18 @@ start_haproxy() {
 }
 
 start_mcp_server() {
+    local redis_url
+    redis_url="$(trim "${REDIS_URL:-}")"
+
     local mcp_server_cmd="redis-mcp-server"
+    if [ -n "$redis_url" ]; then
+        # Auto-prefix redis:// if no scheme is provided
+        case "$redis_url" in
+            redis://*|rediss://*) ;;
+            *) redis_url="redis://${redis_url}" ;;
+        esac
+        mcp_server_cmd="redis-mcp-server --url ${redis_url}"
+    fi
 
     case "${PROTOCOL^^}" in
         SHTTP|STREAMABLEHTTP)
