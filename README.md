@@ -16,16 +16,6 @@
 
 ### Multi-Architecture Docker Image for Redis Data Management
 
-<div align="left">
-
-[![Docker Pulls](https://img.shields.io/docker/pulls/mekayelanik/redis-mcp-server.svg?style=flat-square)](https://hub.docker.com/r/mekayelanik/redis-mcp-server)
-[![Docker Stars](https://img.shields.io/docker/stars/mekayelanik/redis-mcp-server.svg?style=flat-square)](https://hub.docker.com/r/mekayelanik/redis-mcp-server)
-[![License](https://img.shields.io/badge/license-GPL-blue.svg?style=flat-square)](https://raw.githubusercontent.com/MekayelAnik/redis-mcp-server-docker/refs/heads/main/LICENSE)
-
-**[Upstream Repository](https://github.com/redis/mcp-redis)** • **[PyPI Package](https://pypi.org/project/redis-mcp-server/)** • **[Docker Hub](https://hub.docker.com/r/mekayelanik/redis-mcp-server)**
-
-</div>
-
 ---
 
 ## Table of Contents
